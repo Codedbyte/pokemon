@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.white70.withAlpha(220),
         appBar: new AppBar(
           title: new Text('Pokemon'),
           backgroundColor: Colors.cyan,
