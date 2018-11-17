@@ -15,10 +15,11 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+PokeModel pokemon;
 
 class _HomeState extends State<Home> {
-  final String url = "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json";
-  PokeModel pokemon;
+  final String url =
+      "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json";
 
   @override
   void initState() {
@@ -37,13 +38,25 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.white70.withAlpha(220),
+        floatingActionButton: new FloatingActionButton(
+            backgroundColor: Colors.cyan,
+            child: new Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              fetchData();
+            }),
+        backgroundColor: Colors.white70.withAlpha(220),
         appBar: new AppBar(
           title: new Text('Pokemon'),
           backgroundColor: Colors.cyan,
           centerTitle: true,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search), onPressed: (){})
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {showSearch(context: context, delegate: DataSearch());},
+            )
           ],
         ),
         body: pokemon == null
@@ -51,7 +64,7 @@ class _HomeState extends State<Home> {
                 child: CircularProgressIndicator(),
               )
             : GridView.count(
-          padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 crossAxisCount: 2,
                 children: pokemon.pokemon
                     .map((poke) => Padding(
@@ -62,8 +75,8 @@ class _HomeState extends State<Home> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PokeDetail(
-                                        pokemon: poke,
-                                      )));
+                                            pokemon: poke,
+                                          )));
                             },
                             child: Card(
                               elevation: 3.0,
@@ -95,5 +108,64 @@ class _HomeState extends State<Home> {
                         ))
                     .toList(),
               ));
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      new IconButton(
+          icon: Icon(Icons.cancel),
+          onPressed: () {
+            query = "";
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+      icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    final pokemons = [];
+    final pokeIcon = [];
+    for(int i = 0; i < pokemon.pokemon.length; i++){
+      pokemons.add(pokemon.pokemon[i].name);
+      pokeIcon.add(pokemon.pokemon[i].img);
+
+    }
+    final suggestion = pokemons.where((p)=>p.toString().toLowerCase().startsWith(query.toLowerCase())).toList();
+    return ListView.builder(
+      itemCount: suggestion.length,
+        itemBuilder: (context,i){
+        return ListTile(
+          leading: new Container(
+            height: 50.0,
+            width: 50.0, 
+              decoration: BoxDecoration(
+                image: DecorationImage(image: NetworkImage(pokeIcon[i]))
+              ),
+          ),
+          title: new Text(suggestion[i]),
+        );
+        });
   }
 }

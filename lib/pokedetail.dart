@@ -27,13 +27,13 @@ class PokeDetail extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15)
                   ),
                   child: new Container(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0,horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 0.0,horizontal: 20.0),
                     height: MediaQuery.of(context).size.height / 1.5,
                     width: MediaQuery.of(context).size.width - 50,
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        new SizedBox(height: 15.0,),
+                        new SizedBox(height: 5.0,),
                         Text(
                           pokemon.name,
                           style: TextStyle(
